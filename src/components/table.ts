@@ -57,3 +57,22 @@ export const testData = [
     value: 'notActive'
   }
 ] as Array<{ text: string; value: 'online' | 'offline' | 'notActive' }>
+
+export const searchSelect = [
+  {
+    text: 'ID',
+    value: 'id'
+  },
+  {
+    text: '设备名称',
+    value: 'name'
+  },
+  {
+    text: '状态',
+    value: 'status'
+  },
+  {
+    text: '说明',
+    value: 'describe'
+  }
+]

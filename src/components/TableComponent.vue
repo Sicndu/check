@@ -1,11 +1,11 @@
 <template>
-  <div style="margin: 15px 0" v-if="data && data.length > 0">
+  <div class="table-container" v-if="data && data.length > 0">
     <a-table
       :row-selection="rowSelection"
       :columns="columns"
       :data-source="data"
       :pagination="false"
-      :scroll="{ y: 650 }"
+      :scroll="{ y: 500 }"
     >
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'createTime'">
@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, toRefs, PropType, ref } from 'vue'
+import { defineProps, defineEmits, toRefs, PropType } from 'vue'
 import {
   EyeTwoTone,
   EditTwoTone,
@@ -106,5 +106,9 @@ const handleDelete = (key: string) => emit('handleDelete', key)
 <style scoped>
 .button-pointer {
   cursor: not-allowed;
+}
+.table-container {
+  margin-top: 15px;
+  height: calc(100vh - 250px);
 }
 </style>

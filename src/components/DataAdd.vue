@@ -42,7 +42,7 @@
     </a-form>
     <template #footer>
       <a-button style="margin-left: 10px" @click="closeModal">取消</a-button>
-      <a-button type="primary" @click="onSubmit" :disabled="viewRef">
+      <a-button type="primary" @click="onSubmit" v-if="!viewRef">
         {{ isEdit ? '保存' : '新增' }}
       </a-button>
     </template>
@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, reactive, ref, toRaw } from 'vue'
+import { PropType, reactive, ref } from 'vue'
 import type { UnwrapRef } from 'vue'
 import { DataType } from './type'
 import { Rule } from 'ant-design-vue/es/form'
@@ -63,6 +63,8 @@ const props = defineProps({
     required: true
   }
 })
+
+const emit = defineEmits(['success'])
 
 const formState: UnwrapRef<DataType> = reactive({
   key: '',
@@ -120,7 +122,19 @@ const onSubmit = () => {
   formRef.value
     .validate()
     .then(() => {
-      const key = `ID_${Date.now().toString().slice(-2)}`
+      const maxNum = Math.max(
+        ...props.data.map((item: any) => {
+          const parts = item.key.split('_')
+          if (parts.length > 1) {
+            const numPart = Number(parts[1])
+            if (!isNaN(numPart)) {
+              return numPart // 返回提取出的数字
+            }
+          }
+          return -Infinity // 如果没有有效的数字，返回一个比任何实际数字都小的值
+        })
+      )
+      const key = `ID_${maxNum + 1}`
       if (isEdit.value) {
         const tag = props.data.find((item: any) => item.key === formState.key)
         if (tag) {
@@ -137,7 +151,7 @@ const onSubmit = () => {
           describe: formState.describe,
           status: testData[Math.floor(Math.random() * (Math.floor(2) - Math.ceil(0) + 1))]
         }
-        props.data.push(toRaw(params))
+        emit('success', { ...params })
       }
       closeModal()
       message.success(`${isEdit.value ? '编辑' : '新增'}成功`)

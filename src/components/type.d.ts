@@ -8,3 +8,9 @@ export interface DataType {
   }
   describe: string
 }
+
+export interface SearchComponentData {
+  searchValue: string
+  searchSelect: 'id' | 'name' | 'describe' | 'status'
+  searchType: 'include' | 'exclude' | 'online' | 'offline' | 'notActive'
+}
